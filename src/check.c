@@ -1,25 +1,25 @@
-#include "../philosophers.h"
+#include "../include/philosophers.h"
 
-int checkArgsNumbers(int argc)
+int check_args_numbers(int argc)
 {
     if (argc < 5 || argc > 6)
     {
-        putStrFd("Please check the number of arguments.\n", STDERR_FILENO);
+        put_str_fd("Please check the number of arguments.\n", STDERR_FILENO);
         return (ERROR);
     }
     return (0);
 }
 
-int checkArgsType(char **argv)
+int check_args_type(char **argv)
 {
     size_t i;
 
     i = 1;
     while (argv[i])
     {
-        if (isNotNumeric(argv[i]))
+        if (is_not_numeric(argv[i]))
         {
-            putStrFd("Please check that all parameters are positive int.\n", STDERR_FILENO);
+            put_str_fd("Please check that all parameters are positive int.\n", STDERR_FILENO);
             return (ERROR);
         }
         i++;
@@ -27,11 +27,11 @@ int checkArgsType(char **argv)
     return (0);
 }
 
-int checkInput(int argc, char **argv)
+int check_input(int argc, char **argv)
 {
-    if (checkArgsNumbers(argc) == ERROR)
+    if (check_args_numbers(argc) == ERROR)
         return (ERROR);
-    if (checkArgsType(argv) == ERROR)
+    if (check_args_type(argv) == ERROR)
         return (ERROR);
     return (0);
 }

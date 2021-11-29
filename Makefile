@@ -3,6 +3,7 @@ NAME		= philosophers
 SRC_FILES	= main.c\
 			  utils.c\
 			  check.c\
+			  init.c\
 
 OBJS_DIR	= objs
 
@@ -10,26 +11,26 @@ SRC_DIR		= src
 
 INCLUDE		= ./include
 
-SRC_OBJS	= $($(SRC_DIR)/SRC_FILES:.c=.o)
+OBJS		= $(addprefix $(OBJS_DIR)/, $(SRC_FILES:.c=.o))
 
 CC			= clang
 
-CFLAGS		= -Wall -Wextra -Werror -I$(INCLUDE) -g
+CFLAGS		= -Wall -Wextra -Werror -I$(INCLUDE) -g -pthread
 
 RM			= rm -rf
 
 $(OBJS_DIR)/%.o: $(SRC_DIR)/%.c
-			@$(CC) -c $(CFLAGS) $< -o $@
+			@$(CC) $(CFLAGS) -c $< -o $@
 
 
 all:		$(NAME)
 
-$(NAME):	$(SRC_OBJS)
-				@$(CC) $(CFLAGS) $(OBJS_DIR)$(SRC_OBJS) -o $(NAME)
+$(NAME):	$(OBJS)
+				@$(CC) $(CFLAGS) -o $@ $^
 				@echo "$(NAME) created"
 
 clean:
-			@$(RM) $(SRC_OBJS)
+			@$(RM) $(OBJS)
 			@echo "$(NAME) .o deleted"
 
 fclean:		clean

@@ -1,0 +1,6 @@
+usleep suspends thread execution for usec microseconds
+when a philosophers is eating, all others threads aka philo should be suspend using usleep
+if the value of usleep is greater than 'time_to_die', the philo dies and prgm exit
+there's a fork between each philo
+if a philo takes a fork, the fork should be protected with a mutex, making it unavailable
+for the others philo

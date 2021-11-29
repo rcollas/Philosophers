@@ -1,6 +1,6 @@
-#include "../philosophers.h"
+#include "../include/philosophers.h"
 
-size_t  strLen(char *str)
+size_t  str_len(char *str)
 {
     size_t  len;
 
@@ -10,28 +10,27 @@ size_t  strLen(char *str)
     return (len);
 }
 
-void putStrFd(char *str, int fd)
+void put_str_fd(char *str, int fd)
 {
-    write (fd, str, strLen(str));
+    write (fd, str, str_len(str));
 }
 
-_Bool isDigit(char c)
+_Bool is_digit(char c)
 {
     if (c >= '0' && c <= '9')
         return (TRUE);
     return (FALSE);
 }
 
-_Bool isNotNumeric(char *str)
+_Bool is_not_numeric(char *str)
 {
     size_t  i;
 
     i = -1;
-    while (isDigit(str[i]))
+    while (is_digit(str[++i]))
     {
-        if (str[i + 0] == '\0')
+        if (str[i + 1] == '\0')
             return (FALSE);
-        i++;
     }
     return (TRUE);
 }
