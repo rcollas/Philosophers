@@ -4,14 +4,14 @@ pthread_mutex_t	mutex;
 int	i;
 t_var	var[1];
 
-void	*incremente()
+void	*incremente(void *k)
 {
 	struct timeval start, end;
 
 	if (var->numberOfForks >= 2) {
 		var->numberOfForks -= 2;
 		//printf("seconds = %ld, micro seconds = %ld\n", time.tv_sec, time.tv_usec);
-		printf("Is eating\n");
+		printf("Philosophers %d is eating\n", *((int *)k));
 		gettimeofday(&start, NULL);
 		usleep(var->timeToEat);
 		var->numberOfForks += 2;
@@ -37,7 +37,7 @@ int main(int argc, char **argv)
 	pthread_mutex_init(&mutex, NULL);
 	while (1) {
 		for (int k = 0; k <= var->numberOfPhilosophers; k++)
-			pthread_create(&(var->philosophers)[k], NULL, &incremente, NULL);
+			pthread_create(&(var->philosophers)[k], NULL, &incremente, (void *)&k);
 		for (int j = 0; j <= var->numberOfPhilosophers; ++j)
 			pthread_join(var->philosophers[j], NULL);
 	}
