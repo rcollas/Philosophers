@@ -1,52 +1,81 @@
 #include "../include/philosophers.h"
 
 pthread_mutex_t	mutex;
-int	i;
-t_var	var[1];
-int is_sleeping = 0;
 
-void	*eat(void *l)
+int	check_available_fork(t_var *var, int *fork, int philosophers)
 {
-	struct timeval start, end;
-	int k;
-	k = *(int *)l;
+	if (philosophers < var->numberOfPhilosophers - 1 && fork[philosophers] && fork[philosophers + 1]
+			&& var->sleep[philosophers] == FALSE)
+	{
+		fork[philosophers] = 0;
+		fork[philosophers + 1] = 0;
+		return (SUCCESS);
+	}
+	return (FAIL);
+}
 
-	//printf("seconds = %ld, micro seconds = %ld\n", time.tv_sec, time.tv_usec);
-	gettimeofday(&start, NULL);
-	if (k % 2 == 0 && !is_sleeping) {
-		pthread_mutex_lock(&mutex);
-		usleep(5);
-		printf("Philosophers %d is eating\n", k);
+void	*incremente(void *var)
+{
+	t_var *functionVar = (t_var *)var;
+
+	pthread_mutex_lock(&mutex);
+		//printf("seconds = %ld, micro seconds = %ld\n", time.tv_sec, time.tv_usec);
+		if (check_available_fork(functionVar, functionVar->forks, functionVar->numberOfForks) == SUCCESS)
+		{
+			printf("Philosophers %d is eating\n", functionVar->numberOfForks);
+			printf("Fork %d is used\n", functionVar->numberOfForks);
+			printf("Fork %d is used\n", functionVar->numberOfForks + 1);
+			functionVar->sleep[functionVar->numberOfForks] = TRUE;
+		}
+		functionVar->numberOfForks++;
+		/*
+		gettimeofday(&start, NULL);
 		usleep(var->timeToEat);
-	}
-	else {
-		pthread_mutex_unlock(&mutex);
-		printf("Philosophers %d is eating\n", k);
-	}
-
-	gettimeofday(&end, NULL);
+		usleep(var->timeToSleep);
+		gettimeofday(&end, NULL);
+		printf("time = %ld\n", end.tv_usec - start.tv_usec);
+		printf("time to die = %ld\n", var->timeToDie);
+		//if (end.tv_usec - start.tv_usec > var->timeToDie)
+		//	exit (1);
+		 */
+	pthread_mutex_unlock(&mutex);
 	return (NULL);
+}
+
+int	run_thread(t_var *var)
+{
+	int	i;
+
+	i = -1;
+	pthread_mutex_init(&mutex, NULL);
+	while (++i < var->numberOfPhilosophers)
+	{
+		if (pthread_create(&(var->philosophers)[i], NULL, (void *) incremente, (void *) var) != 0)
+			return (error(PTHREAD_CREATE_ERROR));
+	}
+	i = -1;
+	while (++i < var->numberOfPhilosophers)
+	{
+		if (pthread_join(var->philosophers[i], NULL) != 0)
+			return (error(PTHREAD_JOIN_ERROR));
+	}
+	pthread_mutex_destroy(&mutex);
+	return (0);
 }
 
 int main(int argc, char **argv)
 {
-	i = -1;
-	int	k;
+	t_var	var[1];
+
     if (check_input(argc, argv) == ERROR)
 		return (ERROR);
 	init_table(var, argv);
-	pthread_mutex_init(&mutex, NULL);
-	//while (1) {
-	k = 0;
-	while (++k <= var->numberOfPhilosophers)
-	{
-		pthread_create(&(var->philosophers)[k], NULL, &eat, (void *) &k);
-	}
-	k = 0;
-	while (++k <= var->numberOfPhilosophers) {
-		pthread_join(var->philosophers[k], NULL);
-	}
-	//}
-	pthread_mutex_destroy(&mutex);
-    return (0);
+	var->numberOfForks = 0;
+	run_thread(var);
+	init_fork(var->forks, var->numberOfPhilosophers);
+	var->numberOfForks = 0;
+	run_thread(var);
+	init_fork(var->forks, var->numberOfPhilosophers);
+	var->numberOfForks = 0;
+    return (run_thread(var));
 }
