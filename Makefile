@@ -4,6 +4,7 @@ SRC_FILES	= main.c\
 			  utils.c\
 			  check.c\
 			  init.c\
+			  error.c\
 
 OBJS_DIR	= objs
 

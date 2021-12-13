@@ -4,7 +4,7 @@ int	check_args_numbers(int argc)
 {
 	if (argc < 5 || argc > 6)
 	{
-		put_str_fd("Please check the number of arguments.\n", STDERR_FILENO);
+		ft_putstr_fd("Please check the number of arguments.\n", STDERR_FILENO);
 		return (ERROR);
 	}
 	return (0);
@@ -19,7 +19,7 @@ int	check_args_type(char **argv)
 	{
 		if (is_not_numeric(argv[i]))
 		{
-			put_str_fd("Please check that all parameters are positive int.\n", STDERR_FILENO);
+			ft_putstr_fd("Please check that all parameters are positive int.\n", STDERR_FILENO);
 			return (ERROR);
 		}
 		i++;

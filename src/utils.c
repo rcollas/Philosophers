@@ -1,4 +1,4 @@
-#include "../include/philosophers.h"
+#include "utils.h"
 
 size_t	str_len(char *str)
 {
@@ -10,7 +10,7 @@ size_t	str_len(char *str)
 	return (len);
 }
 
-void	put_str_fd(char *str, int fd)
+void	ft_putstr_fd(char *str, int fd)
 {
 	write (fd, str, str_len(str));
 }
