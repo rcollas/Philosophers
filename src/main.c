@@ -4,7 +4,7 @@ pthread_mutex_t	mutex;
 
 int	check_available_fork(t_var *var, int *fork, int philosophers)
 {
-	if (philosophers < var->numberOfPhilosophers - 1 && fork[philosophers] && fork[philosophers + 1]
+	if (fork[philosophers] && fork[(philosophers  + 1 ) % var->numberOfPhilosophers]
 			&& var->sleep[philosophers] == FALSE)
 	{
 		fork[philosophers] = 0;
@@ -23,8 +23,8 @@ void	*incremente(void *var)
 		if (check_available_fork(functionVar, functionVar->forks, functionVar->numberOfForks) == SUCCESS)
 		{
 			printf("Philosophers %d is eating\n", functionVar->numberOfForks);
-			printf("Fork %d is used\n", functionVar->numberOfForks);
-			printf("Fork %d is used\n", functionVar->numberOfForks + 1);
+			printf("Fork %d is used\n", functionVar->numberOfForks /*% (functionVar->numberOfPhilosophers - 1)*/);
+			printf("Fork %d is used\n", (functionVar->numberOfForks + 1) % (functionVar->numberOfPhilosophers));
 			functionVar->sleep[functionVar->numberOfForks] = TRUE;
 		}
 		functionVar->numberOfForks++;
@@ -71,11 +71,14 @@ int main(int argc, char **argv)
 		return (ERROR);
 	init_table(var, argv);
 	var->numberOfForks = 0;
+	printf("1st iter\n");
 	run_thread(var);
 	init_fork(var->forks, var->numberOfPhilosophers);
 	var->numberOfForks = 0;
+	printf("2nd iter\n");
 	run_thread(var);
 	init_fork(var->forks, var->numberOfPhilosophers);
 	var->numberOfForks = 0;
+	printf("last iter\n");
     return (run_thread(var));
 }
