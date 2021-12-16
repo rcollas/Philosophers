@@ -5,6 +5,8 @@ SRC_FILES	= main.c\
 			  check.c\
 			  init.c\
 			  error.c\
+			  mutex.c\
+			  thread.c\
 
 OBJS_DIR	= objs
 
