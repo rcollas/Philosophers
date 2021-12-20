@@ -5,18 +5,24 @@
 
 typedef struct	s_var {
 	int				numberOfPhilosophers;
-	int				num;
-	int		 		i;
 	int 			numberOfForks;
 	long int		timeToDie;
 	int		 		timeToEat;
 	int			 	timeToSleep;
-	int 			*sleep;
-	int 			*has_eat;
-	int				lock;
-	struct timeval	time;
-	pthread_t		*philosophers;
+	int 			philoDied;
+	struct timeval	start;
+	struct s_philosopher *philosopher;
 	pthread_mutex_t	*forks;
 }				t_var;
+
+typedef struct s_philosopher {
+	int			id;
+	int 		rightFork;
+	int 		leftFork;
+	int			state;
+	pthread_t 	philosopher;
+	t_var		*var;
+	struct timeval lastMeal;
+}				t_philosopher;
 
 #endif

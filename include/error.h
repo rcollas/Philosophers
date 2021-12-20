@@ -10,6 +10,10 @@
 # define PTHREAD_JOIN_ERROR -2
 # define MUTEX_INIT_ERROR -3
 # define MUTEX_DESTROY_ERROR -4
+# define MUTEX_LOCK_ERROR -5
+# define MUTEX_UNLOCK_ERROR -6
+# define CALLOC_ERROR -7
+# define GETTIMEOFDAY_ERROR -8
 
 int	error(int errnum);
 

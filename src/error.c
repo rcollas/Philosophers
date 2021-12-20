@@ -25,6 +25,30 @@ int mutex_destroy_error(void)
 	return (-4);
 }
 
+int	mutex_lock_error(void)
+{
+	ft_putstr_fd("Mutex lock failed\n", 2);
+	return (-5);
+}
+
+int	mutex_unlock_error(void)
+{
+	ft_putstr_fd("Mutex unlock failed\n", 2);
+	return (-6);
+}
+
+int	calloc_error(void)
+{
+	ft_putstr_fd("Calloc failed\n", 2);
+	return (-7);
+}
+
+int	gettimeofday_error(void)
+{
+	ft_putstr_fd("Gettimeofday failed\n", 2);
+	return (-8);
+}
+
 int	error(int errnum)
 {
 	if (errnum == PTHREAD_CREATE_ERROR)
@@ -35,5 +59,13 @@ int	error(int errnum)
 		return (mutex_init_error());
 	if (errnum == MUTEX_DESTROY_ERROR)
 		return (mutex_destroy_error());
+	if (errnum == MUTEX_LOCK_ERROR)
+		return (mutex_lock_error());
+	if (errnum == MUTEX_UNLOCK_ERROR)
+		return (mutex_unlock_error());
+	if (errnum == CALLOC_ERROR)
+		return (calloc_error());
+	if (errnum == GETTIMEOFDAY_ERROR)
+		return (gettimeofday_error());
 	return (0);
 }

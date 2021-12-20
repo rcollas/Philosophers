@@ -7,6 +7,10 @@ SRC_FILES	= main.c\
 			  error.c\
 			  mutex.c\
 			  thread.c\
+			  free.c\
+			  do_action.c\
+			  print_state.c\
+			  timestamp.c\
 
 OBJS_DIR	= objs
 
@@ -18,7 +22,7 @@ OBJS		= $(addprefix $(OBJS_DIR)/, $(SRC_FILES:.c=.o))
 
 CC			= clang
 
-CFLAGS		= -Wall -Wextra -Werror -I$(INCLUDE) -g -pthread
+CFLAGS		= -Wall -Wextra -Werror -I$(INCLUDE) -g -pthread #-fsanitize=address
 
 RM			= rm -rf
 

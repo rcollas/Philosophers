@@ -1,51 +1,50 @@
 #include "philosophers.h"
 
-int	check_available_fork(t_var *var, int *fork, int philosophers)
+int	is_philo_died(t_var *var, t_philosopher *philosopher)
 {
-	if (fork[philosophers] && fork[(philosophers  + 1 ) % var->numberOfPhilosophers]
-			&& var->sleep[philosophers] == FALSE)
+	//while (philosopher->state == STARVING)
+	//{
+		//printf("timestamp is : %ld\n", get_timestamp(philosopher->lastMeal));
+		if (get_timestamp(philosopher->lastMeal) > var->timeToDie && var->philoDied == FALSE)
+		{
+			var->philoDied = TRUE;
+			print_philo_died(philosopher);
+		}
+//	}
+	return (SUCCESS);
+}
+
+int	sit_at_table(void *functionPhilosopher)
+{
+	t_philosopher	*philosopher = functionPhilosopher;
+	t_var			*var = philosopher->var;
+
+	while (var->philoDied == FALSE)
 	{
-		fork[philosophers] = 0;
-		fork[(philosophers + 1) % var->numberOfPhilosophers] = 0;
-		printf("Forks are available to philo %d\n\n", philosophers);
-		return (SUCCESS);
+		take_forks(var, philosopher);
+		gettimeofday(&philosopher->lastMeal, NULL);
+		eat(var, philosopher);
+		put_down_forks(var, philosopher);
+		is_philo_died(var, philosopher);
+		go_sleep(var, philosopher);
+		is_philo_died(var, philosopher);
+		//is_thinking(var, philosopher);
 	}
-	return (FAIL);
+	return (SUCCESS);
 }
 
-void	print_timestamp(t_var *var)
-{
-	struct timeval	timestamp;
-	long 			interval;
-
-	gettimeofday(&timestamp, NULL);
-	interval = (timestamp.tv_usec - var->time.tv_usec) / 1000;
-	printf("%ld", interval);
-}
-
-void	get_timestamp(t_var *var)
-{
-	struct timeval start;
-	gettimeofday(&start, NULL);
-	var->time = start;
-}
-
-void	take_fork(void *functionVar)
-{
-	t_var	*var = functionVar;
-	pthread_mutex_lock(&var->forks[var->num]);
-	printf("num = %d\n", var->num);
-	pthread_mutex_unlock(&var->forks[var->num]);
-}
-
-int	run_thread(t_var *var)
+int	run_thread(t_philosopher *philosophers, t_var *var)
 {
 	if (mutex_init(var->forks, var->numberOfPhilosophers) == MUTEX_INIT_ERROR)
 		return (ERROR);
-	if (thread_create(var) == PTHREAD_CREATE_ERROR)
-		return (ERROR);
-	if (thread_join(var) == PTHREAD_JOIN_ERROR)
-		return (ERROR);
+	get_starting_timestamp(var);
+	//while (var->philoDied == FALSE)
+	//{
+		if (thread_create(philosophers) == PTHREAD_CREATE_ERROR)
+			return (ERROR);
+		if (thread_join(philosophers) == PTHREAD_JOIN_ERROR)
+			return (ERROR);
+	//}
 	if (mutex_destroy(var->forks, var->numberOfPhilosophers) == MUTEX_DESTROY_ERROR)
 		return (ERROR);
 	return (SUCCESS);
@@ -58,8 +57,9 @@ int main(int argc, char **argv)
     if (check_input(argc, argv) == ERROR)
 		return (ERROR);
 	init_table(var, argv);
-	get_timestamp(var);
-	if (run_thread(var) == ERROR)
+	if (run_thread(var->philosopher, var) == ERROR)
 		return (EXIT_FAILURE);
+	ft_free(var->philosopher);
+	ft_free(var->forks);
     return (EXIT_SUCCESS);
 }
