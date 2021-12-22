@@ -2,24 +2,40 @@
 
 void	print_philo_eating(t_philosopher *philosopher)
 {
+	pthread_mutex_lock(&philosopher->var->mutex_print);
 	printf("%ld", get_timestamp(philosopher->var->start));
-	printf("ms : Philo %d is eating with forks %d and %d\n", philosopher->id + 1, philosopher->leftFork + 1, philosopher->rightFork + 1);
+	printf(" %d is eating\n", philosopher->id + 1);
+	pthread_mutex_unlock(&philosopher->var->mutex_print);
 }
 
 void	print_philo_sleeping(t_philosopher *philosopher)
 {
+	pthread_mutex_lock(&philosopher->var->mutex_print);
 	printf("%ld", get_timestamp(philosopher->var->start));
-	printf("ms : Philo %d is sleeping\n", philosopher->id + 1);
+	printf(" %d is sleeping\n", philosopher->id + 1);
+	pthread_mutex_unlock(&philosopher->var->mutex_print);
 }
 
 void	print_philo_thinking(t_philosopher *philosopher)
 {
+	pthread_mutex_lock(&philosopher->var->mutex_print);
 	printf("%ld", get_timestamp(philosopher->var->start));
-	printf("ms : Philo %d is thinking\n", philosopher->id + 1);
+	printf(" %d is thinking\n", philosopher->id + 1);
+	pthread_mutex_unlock(&philosopher->var->mutex_print);
 }
 
 void	print_philo_died(t_philosopher *philosopher)
 {
+	pthread_mutex_lock(&philosopher->var->mutex_print);
 	printf("%ld", get_timestamp(philosopher->var->start));
-	printf("ms : Philo %d died\n", philosopher->id + 1);
+	printf(" %d died\n", philosopher->id + 1);
+	pthread_mutex_unlock(&philosopher->var->mutex_print);
+}
+
+void	print_philo_takes_fork(t_philosopher *philosopher)
+{
+	pthread_mutex_lock(&philosopher->var->mutex_print);
+	printf("%ld", get_timestamp(philosopher->var->start));
+	printf(" %d has taken a fork\n", philosopher->id + 1);
+	pthread_mutex_unlock(&philosopher->var->mutex_print);
 }

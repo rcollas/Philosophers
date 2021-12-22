@@ -1,5 +1,7 @@
 NAME		= philosophers
 
+DEBUG		= philosophers_debug
+
 SRC_FILES	= main.c\
 			  utils.c\
 			  check.c\
@@ -12,6 +14,12 @@ SRC_FILES	= main.c\
 			  print_state.c\
 			  timestamp.c\
 
+INC_FILES	=	philosophers.h\
+				error.h\
+				free.h\
+				struct.h\
+				utils.h\
+
 OBJS_DIR	= objs
 
 SRC_DIR		= src
@@ -20,13 +28,15 @@ INCLUDE		= ./include
 
 OBJS		= $(addprefix $(OBJS_DIR)/, $(SRC_FILES:.c=.o))
 
+INCS		= $(addprefix $(INCLUDE)/, $(INC_FILES))
+
 CC			= clang
 
-CFLAGS		= -Wall -Wextra -Werror -I$(INCLUDE) -g -pthread #-fsanitize=address
+CFLAGS		= -Wall -Wextra -Werror -I$(INCLUDE) -g -pthread -fsanitize=thread
 
 RM			= rm -rf
 
-$(OBJS_DIR)/%.o: $(SRC_DIR)/%.c
+$(OBJS_DIR)/%.o: $(SRC_DIR)/%.c $(INCS)
 			@$(CC) $(CFLAGS) -c $< -o $@
 
 
@@ -41,7 +51,7 @@ clean:
 			@echo "$(NAME) .o deleted"
 
 fclean:		clean
-				@$(RM) $(NAME)
+				@$(RM) $(NAME) $(DEBUG)
 				@echo "$(NAME) deleted"
 
 re:			fclean all
