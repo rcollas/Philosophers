@@ -24,5 +24,7 @@ void	init_table(t_var *var, char **argv)
 			var->numberOfPhilosophers + 1);
 	var->forks = (int *)calloc(sizeof(int), var->numberOfForks);
 	var->sleep = (int *)calloc(sizeof(int), var->numberOfPhilosophers);
+	var->mutex = (pthread_mutex_t *)calloc(sizeof(pthread_mutex_t), var->numberOfPhilosophers);
+	var->loop = 1;
 	init_fork(var->forks, var->numberOfForks);
 }

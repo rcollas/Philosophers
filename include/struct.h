@@ -11,6 +11,9 @@ typedef struct	s_var {
 	int		 	timeToSleep;
 	int 		*forks;
 	int 		*sleep;
+	volatile int	loop;
+	long 		starting_time;
+	pthread_mutex_t *mutex;
 	pthread_t	*philosophers;
 }				t_var;
 
