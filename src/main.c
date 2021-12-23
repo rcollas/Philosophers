@@ -1,33 +1,54 @@
 #include "philosophers.h"
 
-int	is_philo_died(t_philosopher *philosopher)
+_Bool	is_philo_dead(t_var *var, _Bool *philoDied)
+{
+	pthread_mutex_lock(&var->mutex_die);
+	*philoDied = var->philoDied;
+	pthread_mutex_unlock(&var->mutex_die);
+	if (*philoDied == TRUE)
+		return (TRUE);
+	return (FALSE);
+}
+
+void	refresh_timestamp(t_philosopher *philosopher, struct timeval timestamp)
+{
+	pthread_mutex_lock(&philosopher->var->mutex_die);
+	if (philosopher->state == EAT)
+	{
+		gettimeofday(&timestamp, NULL);
+		philosopher->state = FULL;
+	}
+	pthread_mutex_unlock(&philosopher->var->mutex_die);
+}
+
+void
+is_philo_alive(t_philosopher *philosopher, t_var *var, struct timeval timestamp, struct timeval end)
+{
+	pthread_mutex_lock(&var->mutex_die);
+	if (var->philoDied == FALSE && elapsed_time(timestamp, end) > var->timeToDie)
+	{
+		philosopher->var->philoDied = TRUE;
+		print_philo_died(philosopher);
+	}
+	pthread_mutex_unlock(&philosopher->var->mutex_die);
+}
+
+int	handle_philos_death(t_philosopher *philosopher)
 {
 	struct timeval	timestamp;
 	struct timeval	end;
-	_Bool 			philo_died;
+	_Bool 			philoDied;
+	t_var			*var;
 
-	philo_died = FALSE;
+	var = philosopher->var;
+	philoDied = FALSE;
 	gettimeofday(&timestamp, NULL);
-	while (philo_died == FALSE)
+	while (philoDied == FALSE)
 	{
-		pthread_mutex_lock(&philosopher->var->mutex_die);
-		philo_died = philosopher->var->philoDied;
-		pthread_mutex_unlock(&philosopher->var->mutex_die);
-		pthread_mutex_lock(&philosopher->var->mutex_die);
-		if (philosopher->state == EAT)
-		{
-			gettimeofday(&timestamp, NULL);
-			philosopher->state = FULL;
-		}
-		pthread_mutex_unlock(&philosopher->var->mutex_die);
+		is_philo_dead(var, &philoDied);
+		refresh_timestamp(philosopher, timestamp);
 		gettimeofday(&end, NULL);
-		pthread_mutex_lock(&philosopher->var->mutex_die);
-		if (philosopher->var->philoDied == FALSE && elapsed_time(timestamp, end) > philosopher->var->timeToDie)
-		{
-			philosopher->var->philoDied = TRUE;
-			print_philo_died(philosopher);
-		}
-		pthread_mutex_unlock(&philosopher->var->mutex_die);
+		is_philo_alive(philosopher, var, timestamp, end);
 	}
 	return (SUCCESS);
 }
@@ -36,35 +57,25 @@ int	sit_at_table(void *functionPhilosopher)
 {
 	t_philosopher	*philosopher = functionPhilosopher;
 	t_var			*var = philosopher->var;
-	_Bool 			philo_died;
+	_Bool 			philoDied;
 
-	philo_died = FALSE;
-	while (philo_died == FALSE)
+	philoDied = FALSE;
+	while (philoDied == FALSE)
 	{
-		pthread_mutex_lock(&var->mutex_die);
-		philo_died = var->philoDied;
-		pthread_mutex_unlock(&var->mutex_die);
-		if (philo_died == TRUE)
+		if (is_philo_dead(var, &philoDied) == TRUE)
 			break ;
-		take_forks(var, philosopher);
+		if (take_forks(var, philosopher) == MUTEX_LOCK_ERROR)
+			return (ERROR);
 		eat(var, philosopher);
-		put_down_forks(var, philosopher);
-		pthread_mutex_lock(&var->mutex_die);
-		philo_died = var->philoDied;
-		pthread_mutex_unlock(&var->mutex_die);
-		if (philo_died == TRUE)
+		if (put_down_forks(var, philosopher) == MUTEX_UNLOCK_ERROR)
+			return (ERROR);
+		if (is_philo_dead(var, &philoDied) == TRUE)
 			break ;
 		go_sleep(var, philosopher);
-		pthread_mutex_lock(&var->mutex_die);
-		philo_died = var->philoDied;
-		pthread_mutex_unlock(&var->mutex_die);
-		if (philo_died == TRUE)
+		if (is_philo_dead(var, &philoDied) == TRUE)
 			break ;
 		is_thinking(var, philosopher);
-		pthread_mutex_lock(&var->mutex_die);
-		philo_died = var->philoDied;
-		pthread_mutex_unlock(&var->mutex_die);
-		if (philo_died == TRUE)
+		if (is_philo_dead(var, &philoDied) == TRUE)
 			break ;
 	}
 	return (SUCCESS);
@@ -74,8 +85,10 @@ int	run_thread(t_philosopher *philosophers, t_var *var)
 {
 	if (mutex_init(var->forks, var->numberOfPhilosophers) == MUTEX_INIT_ERROR)
 		return (ERROR);
-	pthread_mutex_init(&var->mutex_die, NULL);
-	pthread_mutex_init(&var->mutex_print, NULL);
+	if (mutex_init(&var->mutex_die, 1) == MUTEX_INIT_ERROR)
+		return (ERROR);
+	if (mutex_init(&var->mutex_print, 1) == MUTEX_INIT_ERROR)
+		return (ERROR);
 	get_starting_timestamp(var);
 	if (thread_create_philosopher(philosophers) == PTHREAD_CREATE_ERROR)
 		return (ERROR);
@@ -87,8 +100,10 @@ int	run_thread(t_philosopher *philosophers, t_var *var)
 		return (ERROR);
 	if (mutex_destroy(var->forks, var->numberOfPhilosophers) == MUTEX_DESTROY_ERROR)
 		return (ERROR);
-	pthread_mutex_destroy(&var->mutex_die);
-	pthread_mutex_destroy(&var->mutex_print);
+	if (mutex_destroy(&var->mutex_die, 1) == MUTEX_DESTROY_ERROR)
+		return (ERROR);
+	if (mutex_destroy(&var->mutex_print, 1) == MUTEX_DESTROY_ERROR)
+		return (ERROR);
 	return (SUCCESS);
 }
 
@@ -97,8 +112,9 @@ int main(int argc, char **argv)
 	t_var	var[1];
 
     if (check_input(argc, argv) == ERROR)
-		return (ERROR);
-	init_table(var, argv);
+		return (EXIT_FAILURE);
+	if (init_table(var, argv) == ERROR)
+		return (EXIT_FAILURE);
 	if (run_thread(var->philosopher, var) == ERROR)
 		return (EXIT_FAILURE);
 	ft_free(var->philosopher);

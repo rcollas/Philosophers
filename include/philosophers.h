@@ -21,8 +21,7 @@
 # define STARVING 1
 # define FULL 0
 
-void	init_table(t_var *var, char **argv);
-void	init_fork(int *tab, int size);
+int		init_table(t_var *var, char **argv);
 size_t	str_len(char *str);
 int		check_args_numbers(int argc);
 int		check_args_type(char **argv);
@@ -46,7 +45,7 @@ int		eat(t_var *var, t_philosopher *philosopher);
 int		go_sleep(t_var *var, t_philosopher *philosopher);
 int		is_thinking(t_var *var, t_philosopher *philosopher);
 int		take_forks(t_var *var, t_philosopher *philosopher);
-int		is_philo_died(t_philosopher *philosopher);
+int		handle_philos_death(t_philosopher *philosopher);
 long	elapsed_time(struct timeval start, struct timeval end);
 
 #endif

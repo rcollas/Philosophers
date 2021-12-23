@@ -32,7 +32,7 @@ INCS		= $(addprefix $(INCLUDE)/, $(INC_FILES))
 
 CC			= clang
 
-CFLAGS		= -Wall -Wextra -Werror -I$(INCLUDE) -g -pthread -fsanitize=thread
+CFLAGS		= -Wall -Wextra -Werror -I$(INCLUDE) -g -pthread #-fsanitize=thread
 
 RM			= rm -rf
 

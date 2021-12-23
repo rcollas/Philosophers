@@ -20,7 +20,7 @@ int	thread_create_monitor(t_philosopher *philosophers)
 	i = -1;
 	while (++i < philosophers->var->numberOfPhilosophers)
 	{
-		if (pthread_create(&(philosophers[i]).monitor, NULL, (void *) is_philo_died, (void *) &philosophers[i]) != 0)
+		if (pthread_create(&(philosophers[i]).monitor, NULL, (void *) handle_philos_death, (void *) &philosophers[i]) != 0)
 			return (error(PTHREAD_CREATE_ERROR));
 	}
 	return (SUCCESS);

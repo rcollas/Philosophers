@@ -1,4 +1,4 @@
-#include "../include/philosophers.h"
+#include "philosophers.h"
 
 int	check_args_numbers(int argc)
 {

@@ -1,17 +1,4 @@
-#include "../include/philosophers.h"
-
-void	init_fork(int *tab, int size)
-{
-	int i;
-
-	i = -1;
-	if (!tab)
-		return ;
-	while (++i < size)
-	{
-		tab[i] = 1;
-	}
-}
+#include "philosophers.h"
 
 int	init_philosophers(t_var *var)
 {
@@ -34,7 +21,7 @@ int	init_philosophers(t_var *var)
 	return (SUCCESS);
 }
 
-void	init_table(t_var *var, char **argv)
+int init_table(t_var *var, char **argv)
 {
 	var->numberOfPhilosophers = atoi(argv[1]);
 	var->philoDied = FALSE;
@@ -43,5 +30,9 @@ void	init_table(t_var *var, char **argv)
 	var->timeToEat = atoi(argv[3]);
 	var->timeToSleep = atoi(argv[4]);
 	var->forks = (pthread_mutex_t *)calloc(sizeof(pthread_mutex_t), var->numberOfForks);
-	init_philosophers(var);
+	if (!var->forks)
+		return (error(CALLOC_ERROR));
+	if (init_philosophers(var) == CALLOC_ERROR)
+		return (CALLOC_ERROR);
+	return (SUCCESS);
 }
