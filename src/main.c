@@ -10,12 +10,33 @@ _Bool	is_philo_dead(t_var *var, _Bool *philoDied)
 	return (FALSE);
 }
 
-void	refresh_timestamp(t_philosopher *philosopher, struct timeval timestamp)
+void	ft_sleep(int milliseconds, t_var *var)
+{
+	int		i;
+	_Bool	philoDied;
+
+	i = 100;
+	pthread_mutex_lock(&var->mutex_die);
+	philoDied = var->philoDied;
+	pthread_mutex_unlock(&var->mutex_die);
+	while (i < milliseconds && philoDied == FALSE)
+	{
+		pthread_mutex_lock(&var->mutex_die);
+		philoDied = var->philoDied;
+		pthread_mutex_unlock(&var->mutex_die);
+		usleep(100 * 1000);
+		i += 100;
+	}
+	if (philoDied == FALSE)
+		usleep((milliseconds - (i - 100)) * 1000);
+}
+
+void	refresh_timestamp(t_philosopher *philosopher, struct timeval *timestamp)
 {
 	pthread_mutex_lock(&philosopher->var->mutex_die);
 	if (philosopher->state == EAT)
 	{
-		gettimeofday(&timestamp, NULL);
+		gettimeofday(timestamp, NULL);
 		philosopher->state = FULL;
 	}
 	pthread_mutex_unlock(&philosopher->var->mutex_die);
@@ -45,9 +66,9 @@ int	handle_philos_death(t_philosopher *philosopher)
 	gettimeofday(&timestamp, NULL);
 	while (philoDied == FALSE)
 	{
-		is_philo_dead(var, &philoDied);
-		refresh_timestamp(philosopher, timestamp);
 		gettimeofday(&end, NULL);
+		is_philo_dead(var, &philoDied);
+		refresh_timestamp(philosopher, &timestamp);
 		is_philo_alive(philosopher, var, timestamp, end);
 	}
 	return (SUCCESS);
@@ -60,7 +81,7 @@ int	sit_at_table(void *functionPhilosopher)
 	_Bool 			philoDied;
 
 	philoDied = FALSE;
-	while (philoDied == FALSE)
+	while (philoDied == FALSE && var->numberOfPhilosophers > 1)
 	{
 		if (is_philo_dead(var, &philoDied) == TRUE)
 			break ;
@@ -78,6 +99,7 @@ int	sit_at_table(void *functionPhilosopher)
 		if (is_philo_dead(var, &philoDied) == TRUE)
 			break ;
 	}
+	//unlock_all(var);
 	return (SUCCESS);
 }
 

@@ -47,5 +47,6 @@ int		is_thinking(t_var *var, t_philosopher *philosopher);
 int		take_forks(t_var *var, t_philosopher *philosopher);
 int		handle_philos_death(t_philosopher *philosopher);
 long	elapsed_time(struct timeval start, struct timeval end);
+void	ft_sleep(int milliseconds, t_var *var);
 
 #endif

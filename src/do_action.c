@@ -25,14 +25,15 @@ int	eat(t_var *var, t_philosopher *philosopher)
 	philosopher->state = EAT;
 	pthread_mutex_unlock(&philosopher->var->mutex_die);
 	print_philo_eating(philosopher);
-	usleep(var->timeToEat * 1000);
+	ft_sleep(var->timeToEat, var);
 	return (SUCCESS);
 }
 
 int	go_sleep(t_var *var, t_philosopher *philosopher)
 {
 	print_philo_sleeping(philosopher);
-	usleep(var->timeToSleep * 1000);
+	ft_sleep(var->timeToSleep, var);
+	//usleep(var->timeToSleep * 1000);
 	return (SUCCESS);
 }
 
