@@ -11,7 +11,7 @@ void	ft_free(void *to_free)
 
 void	free_int_tab(int **tab, int size)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	while (++i < size)

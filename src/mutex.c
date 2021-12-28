@@ -2,7 +2,7 @@
 
 int	mutex_init(pthread_mutex_t *mutex, int size)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	while (++i < size)
@@ -15,7 +15,7 @@ int	mutex_init(pthread_mutex_t *mutex, int size)
 
 int	mutex_destroy(pthread_mutex_t *mutex, int size)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	while (++i < size)

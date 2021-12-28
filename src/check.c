@@ -19,7 +19,8 @@ int	check_args_type(char **argv)
 	{
 		if (is_not_numeric(argv[i]))
 		{
-			ft_putstr_fd("Please check that all parameters are positive int.\n", STDERR_FILENO);
+			ft_putstr_fd("Please check that ", STDERR_FILENO);
+			ft_putstr_fd("all parameters are positive int.\n", STDERR_FILENO);
 			return (ERROR);
 		}
 		i++;

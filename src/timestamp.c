@@ -1,4 +1,4 @@
-#include "philosophers.h"
+#include "timestamp.h"
 
 long	get_timestamp(struct timeval start)
 {
@@ -7,8 +7,8 @@ long	get_timestamp(struct timeval start)
 
 	if (gettimeofday(&timestamp, NULL) == -1)
 		error(GETTIMEOFDAY_ERROR);
-	interval = (timestamp.tv_sec * 1000 - start.tv_sec * 1000) +
-			   (timestamp.tv_usec / 1000 - start.tv_usec / 1000);
+	interval = (timestamp.tv_sec * 1000 - start.tv_sec * 1000)
+		+ (timestamp.tv_usec / 1000 - start.tv_usec / 1000);
 	return (interval);
 }
 

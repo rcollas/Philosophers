@@ -13,12 +13,17 @@ SRC_FILES	= main.c\
 			  do_action.c\
 			  print_state.c\
 			  timestamp.c\
+			  is_philo_dead.c\
+			  mutex_error.c\
 
 INC_FILES	=	philosophers.h\
 				error.h\
 				free.h\
 				struct.h\
 				utils.h\
+				is_philo_dead.h\
+				print_state.h\
+				timestamp.h\
 
 OBJS_DIR	= objs
 

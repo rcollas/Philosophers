@@ -34,3 +34,24 @@ _Bool	is_not_numeric(char *str)
 	}
 	return (TRUE);
 }
+
+void	ft_sleep(int milliseconds, t_var *var)
+{
+	int		i;
+	_Bool	philo_died;
+
+	i = 100;
+	pthread_mutex_lock(&var->mutex_die);
+	philo_died = var->philo_died;
+	pthread_mutex_unlock(&var->mutex_die);
+	while (i < milliseconds && philo_died == FALSE)
+	{
+		pthread_mutex_lock(&var->mutex_die);
+		philo_died = var->philo_died;
+		pthread_mutex_unlock(&var->mutex_die);
+		usleep(100 * 1000);
+		i += 100;
+	}
+	if (philo_died == FALSE)
+		usleep((milliseconds - (i - 100)) * 1000);
+}

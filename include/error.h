@@ -16,5 +16,9 @@
 # define GETTIMEOFDAY_ERROR -8
 
 int	error(int errnum);
+int	mutex_init_error(void);
+int	mutex_destroy_error(void);
+int	mutex_lock_error(void);
+int	mutex_unlock_error(void);
 
 #endif

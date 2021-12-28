@@ -1,4 +1,4 @@
-#include "philosophers.h"
+#include "print_state.h"
 
 void	print_philo_eating(t_philosopher *philosopher)
 {
