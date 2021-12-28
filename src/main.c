@@ -7,7 +7,8 @@ int	sit_at_table(void *functionPhilosopher)
 
 	philo_died = FALSE;
 	philosopher = functionPhilosopher;
-	while (philo_died == FALSE && philosopher->var->number_of_philosophers > 1)
+	while (philo_died == FALSE && philosopher->var->number_of_philosophers > 1
+		&& philosopher->meal_count < philosopher->max_meal)
 	{
 		if (is_philo_dead(philosopher->var, &philo_died) == TRUE)
 			break ;
@@ -16,12 +17,12 @@ int	sit_at_table(void *functionPhilosopher)
 		eat(philosopher->var, philosopher);
 		if (put_down_forks(philosopher->var, philosopher) == MUTEX_UNLOCK_ERROR)
 			return (ERROR);
-		if (is_philo_dead(philosopher->var, &philo_died) == TRUE)
-			break ;
-		go_sleep(philosopher->var, philosopher);
-		if (is_philo_dead(philosopher->var, &philo_died) == TRUE)
-			break ;
-		is_thinking(philosopher->var, philosopher);
+		//if (philosopher->meal_count <= philosopher->max_meal)
+		//	break ;
+		if (is_philo_dead(philosopher->var, &philo_died) == FALSE)
+			go_sleep(philosopher->var, philosopher);
+		if (is_philo_dead(philosopher->var, &philo_died) == FALSE)
+			is_thinking(philosopher->var, philosopher);
 		if (is_philo_dead(philosopher->var, &philo_died) == TRUE)
 			break ;
 	}
@@ -35,6 +36,8 @@ int	run_thread(t_philosopher *philosophers, t_var *var)
 	if (mutex_init(&var->mutex_die, 1) == MUTEX_INIT_ERROR)
 		return (ERROR);
 	if (mutex_init(&var->mutex_print, 1) == MUTEX_INIT_ERROR)
+		return (ERROR);
+	if (mutex_init(&var->mutex_max_eat, 1) == MUTEX_INIT_ERROR)
 		return (ERROR);
 	get_starting_timestamp(var);
 	if (thread_create_philosopher(philosophers) == PTHREAD_CREATE_ERROR)
@@ -51,6 +54,8 @@ int	run_thread(t_philosopher *philosophers, t_var *var)
 	if (mutex_destroy(&var->mutex_die, 1) == MUTEX_DESTROY_ERROR)
 		return (ERROR);
 	if (mutex_destroy(&var->mutex_print, 1) == MUTEX_DESTROY_ERROR)
+		return (ERROR);
+	if (mutex_destroy(&var->mutex_max_eat, 1) == MUTEX_DESTROY_ERROR)
 		return (ERROR);
 	return (SUCCESS);
 }

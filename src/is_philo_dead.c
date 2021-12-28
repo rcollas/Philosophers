@@ -24,9 +24,12 @@ void	refresh_timestamp(t_philosopher *philosopher, struct timeval *timestamp)
 void	is_philo_alive(t_philosopher *philosopher, t_var *var,
 		struct timeval timestamp, struct timeval end)
 {
+	long int timestamp_result;
+
 	pthread_mutex_lock(&var->mutex_die);
+	timestamp_result = elapsed_time(timestamp, end);
 	if (var->philo_died == FALSE
-		&& elapsed_time(timestamp, end) > var->time_to_die)
+		&& timestamp_result > var->time_to_die + 2)
 	{
 		philosopher->var->philo_died = TRUE;
 		print_philo_died(philosopher);

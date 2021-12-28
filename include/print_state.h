@@ -7,6 +7,8 @@
 # include "struct.h"
 # include "timestamp.h"
 
+# define FULL 0
+
 void	print_philo_eating(t_philosopher *philosopher);
 void	print_philo_sleeping(t_philosopher *philosopher);
 void	print_philo_thinking(t_philosopher *philosopher);
