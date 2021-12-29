@@ -23,7 +23,7 @@ int	eat(t_var *var, t_philosopher *philosopher)
 {
 	pthread_mutex_lock(&philosopher->var->mutex_die);
 	philosopher->state = EAT;
-	if (philosopher->max_meal)
+	if (philosopher->max_meal != -1)
 		philosopher->meal_count++;
 	pthread_mutex_unlock(&philosopher->var->mutex_die);
 	print_philo_eating(philosopher);

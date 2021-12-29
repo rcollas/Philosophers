@@ -21,7 +21,7 @@ int	init_philosophers(t_var *var)
 		if (var->max_meal != -1)
 			philosopher[i].meal_count = 0;
 		else
-			philosopher[i].meal_count = -1;
+			philosopher[i].meal_count = -2;
 	}
 	var->philosopher = philosopher;
 	return (SUCCESS);
