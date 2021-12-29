@@ -30,6 +30,8 @@ int		thread_join_philosopher(t_philosopher *philosophers);
 int		thread_join_monitor(t_philosopher *philosophers);
 int		mutex_init(pthread_mutex_t *mutex, int size);
 int		mutex_destroy(pthread_mutex_t *mutex, int size);
+int		init_all_mutex(t_var *var);
 int		sit_at_table(void *functionVar);
+int		destroy_all_mutex(t_var *var);
 
 #endif

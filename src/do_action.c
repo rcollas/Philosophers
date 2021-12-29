@@ -5,16 +5,16 @@ int	put_down_forks(t_var *var, t_philosopher *philosopher)
 	if (philosopher->id % 2 == 0)
 	{
 		if (pthread_mutex_unlock(&var->forks[philosopher->left_fork]) != 0)
-			return (error(MUTEX_UNLOCK_ERROR));
+			error(MUTEX_UNLOCK_ERROR);
 		if (pthread_mutex_unlock(&var->forks[philosopher->right_fork]) != 0)
-			return (error(MUTEX_UNLOCK_ERROR));
+			error(MUTEX_UNLOCK_ERROR);
 	}
 	else
 	{
 		if (pthread_mutex_unlock(&var->forks[philosopher->right_fork]) != 0)
-			return (error(MUTEX_UNLOCK_ERROR));
+			error(MUTEX_UNLOCK_ERROR);
 		if (pthread_mutex_unlock(&var->forks[philosopher->left_fork]) != 0)
-			return (error(MUTEX_UNLOCK_ERROR));
+			error(MUTEX_UNLOCK_ERROR);
 	}
 	return (SUCCESS);
 }
@@ -38,9 +38,8 @@ int	go_sleep(t_var *var, t_philosopher *philosopher)
 	return (SUCCESS);
 }
 
-int	is_thinking(t_var *var, t_philosopher *philosopher)
+int	is_thinking(t_philosopher *philosopher)
 {
-	(void)var;
 	print_philo_thinking(philosopher);
 	return (SUCCESS);
 }
@@ -51,16 +50,16 @@ int	take_forks(t_var *var, t_philosopher *philosopher)
 	{
 		usleep(10);
 		if (pthread_mutex_lock(&var->forks[philosopher->left_fork]) != 0)
-			return (error(MUTEX_LOCK_ERROR));
+			error(MUTEX_LOCK_ERROR);
 		if (pthread_mutex_lock(&var->forks[philosopher->right_fork]) != 0)
-			return (error(MUTEX_LOCK_ERROR));
+			error(MUTEX_LOCK_ERROR);
 	}
 	else
 	{
 		if (pthread_mutex_lock(&var->forks[philosopher->right_fork]) != 0)
-			return (error(MUTEX_LOCK_ERROR));
+			error(MUTEX_LOCK_ERROR);
 		if (pthread_mutex_lock(&var->forks[philosopher->left_fork]) != 0)
-			return (error(MUTEX_LOCK_ERROR));
+			error(MUTEX_LOCK_ERROR);
 	}
 	print_philo_takes_fork(philosopher);
 	return (SUCCESS);

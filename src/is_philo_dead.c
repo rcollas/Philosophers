@@ -24,7 +24,7 @@ void	refresh_timestamp(t_philosopher *philosopher, struct timeval *timestamp)
 void	is_philo_alive(t_philosopher *philosopher, t_var *var,
 		struct timeval timestamp, struct timeval end)
 {
-	long int timestamp_result;
+	long int	timestamp_result;
 
 	pthread_mutex_lock(&var->mutex_die);
 	timestamp_result = elapsed_time(timestamp, end);
@@ -47,7 +47,8 @@ int	handle_philos_death(t_philosopher *philosopher)
 	var = philosopher->var;
 	philo_died = FALSE;
 	gettimeofday(&timestamp, NULL);
-	while (philo_died == FALSE && philosopher->meal_count < philosopher->max_meal)
+	while (philo_died == FALSE
+		&& philosopher->meal_count < philosopher->max_meal)
 	{
 		gettimeofday(&end, NULL);
 		is_philo_dead(var, &philo_died);

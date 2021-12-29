@@ -12,15 +12,13 @@ int	sit_at_table(void *functionPhilosopher)
 	{
 		if (is_philo_dead(philosopher->var, &philo_died) == TRUE)
 			break ;
-		if (take_forks(philosopher->var, philosopher) == MUTEX_LOCK_ERROR)
-			return (ERROR);
+		take_forks(philosopher->var, philosopher);
 		eat(philosopher->var, philosopher);
-		if (put_down_forks(philosopher->var, philosopher) == MUTEX_UNLOCK_ERROR)
-			return (ERROR);
+		put_down_forks(philosopher->var, philosopher);
 		if (is_philo_dead(philosopher->var, &philo_died) == FALSE)
 			go_sleep(philosopher->var, philosopher);
 		if (is_philo_dead(philosopher->var, &philo_died) == FALSE)
-			is_thinking(philosopher->var, philosopher);
+			is_thinking(philosopher);
 		if (is_philo_dead(philosopher->var, &philo_died) == TRUE)
 			break ;
 	}
@@ -29,32 +27,13 @@ int	sit_at_table(void *functionPhilosopher)
 
 int	run_thread(t_philosopher *philosophers, t_var *var)
 {
-	if (mutex_init(var->forks, var->number_of_philosophers) == MUTEX_INIT_ERROR)
-		return (ERROR);
-	if (mutex_init(&var->mutex_die, 1) == MUTEX_INIT_ERROR)
-		return (ERROR);
-	if (mutex_init(&var->mutex_print, 1) == MUTEX_INIT_ERROR)
-		return (ERROR);
-	if (mutex_init(&var->mutex_max_eat, 1) == MUTEX_INIT_ERROR)
-		return (ERROR);
+	init_all_mutex(var);
 	get_starting_timestamp(var);
-	if (thread_create_philosopher(philosophers) == PTHREAD_CREATE_ERROR)
-		return (ERROR);
-	if (thread_create_monitor(philosophers) == PTHREAD_CREATE_ERROR)
-		return (ERROR);
-	if (thread_join_philosopher(philosophers) == PTHREAD_JOIN_ERROR)
-		return (ERROR);
-	if (thread_join_monitor(philosophers) == PTHREAD_JOIN_ERROR)
-		return (ERROR);
-	if (mutex_destroy(var->forks, var->number_of_philosophers)
-		== MUTEX_DESTROY_ERROR)
-		return (ERROR);
-	if (mutex_destroy(&var->mutex_die, 1) == MUTEX_DESTROY_ERROR)
-		return (ERROR);
-	if (mutex_destroy(&var->mutex_print, 1) == MUTEX_DESTROY_ERROR)
-		return (ERROR);
-	if (mutex_destroy(&var->mutex_max_eat, 1) == MUTEX_DESTROY_ERROR)
-		return (ERROR);
+	thread_create_philosopher(philosophers);
+	thread_create_monitor(philosophers);
+	thread_join_philosopher(philosophers);
+	thread_join_monitor(philosophers);
+	destroy_all_mutex(var);
 	return (SUCCESS);
 }
 
@@ -66,8 +45,7 @@ int	main(int argc, char **argv)
 		return (EXIT_FAILURE);
 	if (init_table(var, argv) == ERROR)
 		return (EXIT_FAILURE);
-	if (run_thread(var->philosopher, var) == ERROR)
-		return (EXIT_FAILURE);
+	run_thread(var->philosopher, var);
 	ft_free(var->philosopher);
 	ft_free(var->forks);
 	return (EXIT_SUCCESS);

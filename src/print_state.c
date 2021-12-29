@@ -2,7 +2,7 @@
 
 void	print_philo_eating(t_philosopher *philosopher)
 {
-	long int timestamp;
+	long int	timestamp;
 
 	pthread_mutex_lock(&philosopher->var->mutex_print);
 	if (philosopher->var->philo_died == FALSE)
@@ -16,7 +16,7 @@ void	print_philo_eating(t_philosopher *philosopher)
 
 void	print_philo_sleeping(t_philosopher *philosopher)
 {
-	long int timestamp;
+	long int	timestamp;
 
 	pthread_mutex_lock(&philosopher->var->mutex_print);
 	if (philosopher->var->philo_died == FALSE)
@@ -30,10 +30,11 @@ void	print_philo_sleeping(t_philosopher *philosopher)
 
 void	print_philo_thinking(t_philosopher *philosopher)
 {
-	long int timestamp;
+	long int	timestamp;
 
 	pthread_mutex_lock(&philosopher->var->mutex_print);
-	if (philosopher->var->philo_died == FALSE && philosopher->var->philosopher[philosopher->id + 1].state != FULL)
+	if (philosopher->var->philo_died == FALSE
+		&& philosopher->var->philosopher[philosopher->id + 1].state != FULL)
 	{
 		timestamp = get_timestamp(philosopher->var->start);
 		printf("%ld", timestamp - (timestamp % 10));
@@ -44,7 +45,7 @@ void	print_philo_thinking(t_philosopher *philosopher)
 
 void	print_philo_died(t_philosopher *philosopher)
 {
-	long int timestamp;
+	long int	timestamp;
 
 	pthread_mutex_lock(&philosopher->var->mutex_print);
 	timestamp = get_timestamp(philosopher->var->start);
@@ -58,7 +59,7 @@ void	print_philo_died(t_philosopher *philosopher)
 
 void	print_philo_takes_fork(t_philosopher *philosopher)
 {
-	long int timestamp;
+	long int	timestamp;
 
 	pthread_mutex_lock(&philosopher->var->mutex_print);
 	if (philosopher->var->philo_died == FALSE)
