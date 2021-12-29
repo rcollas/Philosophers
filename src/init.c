@@ -18,7 +18,10 @@ int	init_philosophers(t_var *var)
 		philosopher[i].left_fork = (i + 1) % var->number_of_philosophers;
 		philosopher[i].state = STARVING;
 		philosopher[i].max_meal = var->max_meal;
-		philosopher[i].meal_count = -1;
+		if (var->max_meal)
+			philosopher[i].meal_count = 0;
+		else
+			philosopher[i].meal_count = -1;
 	}
 	var->philosopher = philosopher;
 	return (SUCCESS);
@@ -26,15 +29,15 @@ int	init_philosophers(t_var *var)
 
 int	init_table(t_var *var, char **argv)
 {
-	var->number_of_philosophers = atoi(argv[1]);
+	var->number_of_philosophers = ft_atoi(argv[1]);
 	var->philo_died = FALSE;
 	var->number_of_forks = var->number_of_philosophers;
-	var->time_to_die = atol(argv[2]);
-	var->time_to_eat = atoi(argv[3]);
-	var->time_to_sleep = atoi(argv[4]);
+	var->time_to_die = ft_atoi(argv[2]);
+	var->time_to_eat = ft_atoi(argv[3]);
+	var->time_to_sleep = ft_atoi(argv[4]);
 	var->max_meal = 0;
 	if (argv[5])
-		var->max_meal = atoi(argv[5]);
+		var->max_meal = ft_atoi(argv[5]);
 	var->forks = (pthread_mutex_t *)calloc(sizeof(pthread_mutex_t),
 			var->number_of_forks);
 	if (!var->forks)

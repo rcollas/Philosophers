@@ -15,6 +15,7 @@ SRC_FILES	= main.c\
 			  timestamp.c\
 			  is_philo_dead.c\
 			  mutex_error.c\
+			  ft_atoi.c\
 
 INC_FILES	=	philosophers.h\
 				error.h\

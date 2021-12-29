@@ -6,7 +6,7 @@
 typedef struct s_var {
 	int						number_of_philosophers;
 	int						number_of_forks;
-	long int				time_to_die;
+	int						time_to_die;
 	int						time_to_eat;
 	int						time_to_sleep;
 	int						philo_died;

@@ -17,8 +17,6 @@ int	sit_at_table(void *functionPhilosopher)
 		eat(philosopher->var, philosopher);
 		if (put_down_forks(philosopher->var, philosopher) == MUTEX_UNLOCK_ERROR)
 			return (ERROR);
-		//if (philosopher->meal_count <= philosopher->max_meal)
-		//	break ;
 		if (is_philo_dead(philosopher->var, &philo_died) == FALSE)
 			go_sleep(philosopher->var, philosopher);
 		if (is_philo_dead(philosopher->var, &philo_died) == FALSE)

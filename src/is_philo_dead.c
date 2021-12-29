@@ -47,7 +47,7 @@ int	handle_philos_death(t_philosopher *philosopher)
 	var = philosopher->var;
 	philo_died = FALSE;
 	gettimeofday(&timestamp, NULL);
-	while (philo_died == FALSE)
+	while (philo_died == FALSE && philosopher->meal_count < philosopher->max_meal)
 	{
 		gettimeofday(&end, NULL);
 		is_philo_dead(var, &philo_died);

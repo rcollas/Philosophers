@@ -14,5 +14,7 @@ _Bool	is_digit(char c);
 _Bool	is_not_numeric(char *str);
 void	ft_putstr_fd(char *str, int fd);
 void	ft_sleep(int milliseconds, t_var *var);
+int		ft_atoi(const char *nptr);
+size_t	str_len(const char *str);
 
 #endif
