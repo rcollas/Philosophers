@@ -18,7 +18,7 @@ int	init_philosophers(t_var *var)
 	int				i;
 
 	i = -1;
-	philosopher = (t_philosopher *)calloc(sizeof(t_philosopher),
+	philosopher = (t_philosopher *)ft_calloc(sizeof(t_philosopher),
 			var->number_of_philosophers);
 	if (!philosopher)
 		return (error(CALLOC_ERROR));
@@ -50,7 +50,7 @@ int	init_table(t_var *var, char **argv)
 	var->max_meal = -1;
 	if (argv[5])
 		var->max_meal = ft_atoi(argv[5]);
-	var->forks = (pthread_mutex_t *)calloc(sizeof(pthread_mutex_t),
+	var->forks = (pthread_mutex_t *)ft_calloc(sizeof(pthread_mutex_t),
 			var->number_of_forks);
 	if (!var->forks)
 		return (error(CALLOC_ERROR));
